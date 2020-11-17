@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using System.Collections.Generic;
 using System.IO;
 
@@ -9,7 +8,7 @@ namespace HexEdit
     {
         static void Main(string[] args)
         {
-            var failed = new Dictionary<string,string>();
+            var failed = new Dictionary<string, string>();
             int offset = Convert.ToInt32("26", 16); // Hexadecimal offset 26 -> decimal offset
             int length = Convert.ToInt32("39", 16) - offset; // Range between 26h to 39h
 
@@ -17,27 +16,27 @@ namespace HexEdit
             {
                 try
                 {
-                    Stream outStream = File.Open(path, FileMode.Open);
-                    outStream.Seek(offset, SeekOrigin.Begin);
-                    for(int i = 0; i < length + 1; i++)
+                    using var fs = File.Open(path, FileMode.Open);
+                    fs.Seek(offset, SeekOrigin.Begin);
+                    for (int i = 0; i < length + 1; i++)
                     {
-                        outStream.WriteByte(00);
+                        fs.WriteByte(00);
                     }
-                    outStream.Flush();
+                    fs.Flush();
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     failed.Add(path, $"Reason: {e.Message}");
-                }                
+                }
             }
 
-            if(failed.Count > 0)
+            if (failed.Count > 0)
             {
                 Console.WriteLine("Failed on following files:");
-                foreach(var f in failed)
+                foreach (var f in failed)
                 {
                     Console.WriteLine($"{f.Key}     {f.Value}");
-                }               
+                }
             }
             else
             {
