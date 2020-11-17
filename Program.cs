@@ -9,14 +9,18 @@ namespace HexEdit
         static void Main(string[] args)
         {
             var failed = new Dictionary<string,string>();
-            byte[] bytes = new byte[] { 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00 };
+            var bytes =  new List<byte>(20);
+            for(int i = 0; i < 20; i++)
+            {
+                bytes.Add(00);
+            }
             foreach(var path in args)
             {
                 try
                 {
                     Stream outStream = File.Open(path, FileMode.Open);
-                    outStream.Seek(26, SeekOrigin.Begin);
-                    outStream.Write(bytes, 0, 13);
+                    outStream.Seek(38, SeekOrigin.Begin);
+                    outStream.Write(bytes.ToArray(), 0, 20);
                     outStream.Flush();
                 }
                 catch(Exception e)
