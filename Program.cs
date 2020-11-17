@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.IO;
 
@@ -9,18 +10,19 @@ namespace HexEdit
         static void Main(string[] args)
         {
             var failed = new Dictionary<string,string>();
-            var bytes =  new List<byte>(20);
-            for(int i = 0; i < 20; i++)
-            {
-                bytes.Add(00);
-            }
-            foreach(var path in args)
+            int offset = Convert.ToInt32("26", 16); // Hexadecimal offset 26 -> decimal offset
+            int length = Convert.ToInt32("39", 16) - offset; // Range between 26h to 39h
+
+            foreach (var path in args)
             {
                 try
                 {
                     Stream outStream = File.Open(path, FileMode.Open);
-                    outStream.Seek(38, SeekOrigin.Begin);
-                    outStream.Write(bytes.ToArray(), 0, 20);
+                    outStream.Seek(offset, SeekOrigin.Begin);
+                    for(int i = 0; i < length + 1; i++)
+                    {
+                        outStream.WriteByte(00);
+                    }
                     outStream.Flush();
                 }
                 catch(Exception e)
