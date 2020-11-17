@@ -9,16 +9,14 @@ namespace HexEdit
         static void Main(string[] args)
         {
             var failed = new Dictionary<string,string>();
+            byte[] bytes = new byte[] { 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00 };
             foreach(var path in args)
             {
                 try
                 {
                     Stream outStream = File.Open(path, FileMode.Open);
                     outStream.Seek(26, SeekOrigin.Begin);
-                    for(int i = 0; i < 13; i++)
-                    {
-                        outStream.WriteByte(00);
-                    }
+                    outStream.Write(bytes, 0, 13);
                     outStream.Flush();
                 }
                 catch(Exception e)
